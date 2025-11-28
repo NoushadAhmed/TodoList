@@ -1,16 +1,21 @@
-// config/db.js
+// backend/config/db.js
 const mongoose = require('mongoose');
 
-const MONGO_URI =
-  process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/todolist';
-
 const connectDB = async () => {
+  const uri = process.env.MONGO_URI;
+
+  if (!uri) {
+    console.error("❌ MONGO_URI is not set in environment variables");
+    process.exit(1);
+  }
+
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log('✅ MongoDB connected');
+    console.log("🔌 Connecting to MongoDB with URI:", uri);
+    await mongoose.connect(uri);
+    console.log("✅ MongoDB connected");
   } catch (err) {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1); // stop app if DB fails
+    console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1);
   }
 };
 
